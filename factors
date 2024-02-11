@@ -4,13 +4,13 @@ import sys
 def factorize(n):
     factors = []
     divisor = 2
-    
+
     while n > 1:
         while n % divisor == 0:
             factors.append(divisor)
             n //= divisor
         divisor += 1
-    
+
     return factors
 
 def factorize_file(input_file, output_file):
@@ -18,21 +18,24 @@ def factorize_file(input_file, output_file):
         for line in f_in:
             number = int(line.strip())
             factors = factorize(number)
-            p = factors[0]
-            q = number // p
+            if len(factors) == 1:  # If prime, factorization is number=number*1
+                p = factors[0]
+                q = 1
+            else:
+                p = factors[0]
+                q = number // p
             f_out.write(f"{number}={p}*{q}\n")
 
 def main():
     if len(sys.argv) != 2:
         print("Usage: python script.py <input_file>")
         sys.exit(1)
-    
+
     input_file = sys.argv[1]
     output_file = "factorization_output.txt"
-    
+
     factorize_file(input_file, output_file)
     print("Factorization completed. Check", output_file, "for results.")
 
 if __name__ == "__main__":
     main()
-
