@@ -1,26 +1,22 @@
-#!/usr/bin/python3
-def factorize(n):
-    factors = []
-    divisor = 2
-    
-    while n > 1:
-        while n % divisor == 0:
-            factors.append(divisor)
-            n //= divisor
-        divisor += 1
-    
-    return factors
+#!/bin/bash
 
-def main():
-    try:
-        number = int(input("Enter a number to factorize: "))
-        if number <= 1:
-            print("Please enter a number greater than 1.")
-            return
-        factors = factorize(number)
-        print("Prime factors of", number, "are:", factors)
-    except ValueError:
-        print("Invalid input. Please enter an integer.")
+# Usage function
+usage() {
+	echo "Usage: $0 <file>"
+	echo "  <file>  File containing positive integers (one per line)"
+}
 
-if __name__ == "__main__":
-    main() 
+# Check if file parameter is provided and exists
+if [ -z "$1" ] || [ ! -f "$1" ]; then
+	usage
+	exit 1
+fi
+
+# Read the file line by line
+filename="$1"
+while IFS= read -r number; do
+	result=$(factor "$number")
+	second_num=$(echo $result | tr ":" "=" | cut -d " " -f 2 | tr -d " ")
+	third_num=$(expr $number / $second_num)
+	echo "$number=$third_num*$second_num"
+done < "$filename"
